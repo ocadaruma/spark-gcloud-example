@@ -1,0 +1,24 @@
+[
+    {
+        "Classification": "core-site",
+        "Properties": {
+            "fs.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem",
+            "fs.AbstractFileSystem.gs.impl": "com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS",
+            "google.cloud.auth.service.account.enable": "true",
+            "google.cloud.auth.service.account.email": "example@<your-account>",
+            "google.cloud.auth.service.account.keyfile": "/home/hadoop/credentials.p12",
+            "fs.gs.project.id": "<your-gcp-project-id>"
+        }
+    },
+    {
+        "Classification": "hadoop-env",
+        "Configurations": [
+            {
+                "Classification": "export",
+                "Properties": {
+                    "HADOOP_CLASSPATH": "\"$HADOOP_CLASSPATH:/home/hadoop/gcs-connector-latest-hadoop2.jar\""
+                }
+            }
+        ]
+    }
+]
