@@ -1,6 +1,7 @@
 package com.example
 
 import org.apache.hadoop.fs.Path
+import org.apache.hadoop.io.{NullWritable, Text}
 import org.apache.spark.{SparkConf, SparkContext}
 
 object Main {
@@ -16,7 +17,12 @@ object Main {
     // clean up
     cleanup(sc, output)
 
-    sc.parallelize(0 until n).map(i => s"row:${i}").saveAsTextFile(output)
+    // 250 logs per client
+    sc.parallelize(1 to n).flatMap { clientId =>
+      AccessLog.generateN(clientId, 250)
+    }.map { log =>
+      (Key(log.clientId, log.cookieId), log.toJson)
+    }.saveAsHadoopFile(output, classOf[NullWritable], classOf[Text], classOf[RDDMultipleTextOutputFormat])
 
     sc.stop()
   }
